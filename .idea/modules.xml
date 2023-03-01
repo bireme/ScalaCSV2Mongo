@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/CSV2Mongodb.iml" filepath="$PROJECT_DIR$/.idea/modules/CSV2Mongodb.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/CSV2Mongodb-build.iml" filepath="$PROJECT_DIR$/.idea/modules/CSV2Mongodb-build.iml" />
+    </modules>
+  </component>
+</project>
