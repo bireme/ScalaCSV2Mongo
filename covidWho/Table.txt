@@ -1,0 +1,4 @@
+Refid => ID
+Author => AUTHORS
+Abstractj => ABSTRACT
+Accession_number => NUMBER
