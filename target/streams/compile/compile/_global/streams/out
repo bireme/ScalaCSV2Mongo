@@ -1,0 +1,4 @@
+[0m[[0m[31merror[0m] [0m[0m/home/oliveirmic/Projetos-dev/BIREME-GIT/csv2mongo/src/main/scala/Main.scala:123:4: '}' expected but eof found.[0m
+[0m[[0m[31merror[0m] [0m[0m  }[0m
+[0m[[0m[31merror[0m] [0m[0m   ^[0m
+[0m[[0m[31merror[0m] [0m[0mone error found[0m
