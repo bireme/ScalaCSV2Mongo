@@ -24,11 +24,14 @@ class Main {
 
   private def exportCSV2Mongodb(parameters: InputParameters_CSV2Mongodb): Try[Unit] = {
     Try {
-      val mongoReader: MongoExport = new MongoExport(parameters.database, parameters.collection, parameters.host, parameters.port, parameters.user, parameters.password)
+      val mongoReader: MongoExport = new MongoExport(parameters.database, parameters.collection, parameters.host, parameters.port, parameters.user, parameters.password, parameters.append)
       val csvData: DataReader = new DataReader(parameters.csv, parameters.repeatSeparator.getOrElse(""), parameters.convTable.getOrElse(""), parameters.fieldArray.getOrElse(""), parameters.hasHeader, parameters.noUpDate)
 
-      val jsonDataList: Array[String] = csvData.reader().map(f => Json(DefaultFormats).write(f.toMap))
-      jsonDataList.foreach(f => mongoReader.insertDocument(f) )
+      val jsonDataList: Array[String] = csvData.reader() match {
+        case Success(value) => value.map(f => Json(DefaultFormats).write(f.toMap))
+        case Failure(exception) => throw new Exception(exception.getMessage)
+      }
+      jsonDataList.foreach(f => mongoReader.insertDocument(f))
     }
   }
 }

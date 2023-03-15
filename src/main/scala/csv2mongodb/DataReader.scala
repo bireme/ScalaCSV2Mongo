@@ -6,37 +6,38 @@ import java.io.FileReader
 import java.util
 import java.util.Date
 import scala.io.{BufferedSource, Source}
+import scala.util.Try
 
-class DataReader(path: String, repeatSeparator: String = ",", convTable: String, fieldArray: String, hasHeader: Boolean, noUpDate: Boolean) {
+class DataReader(pathCsv: String, repeatSeparator: String = ",", convTable: String, fieldArray: String, hasHeader: Boolean, noUpDate: Boolean) {
 
+  def reader(): Try[Array[Array[(String, AnyRef)]]] = {
+    Try {
+      val fileCsv: FileReader = new FileReader(pathCsv)
+      val rowsCsv: util.List[CSVRecord] = CSVFormat.DEFAULT.parse(fileCsv).getRecords
 
-  def reader(): Array[Array[(String, AnyRef)]] = {
-
-    val fileCsv: FileReader = new FileReader(path)
-    val rowsCsv: util.List[CSVRecord] = CSVFormat.DEFAULT.parse(fileCsv).getRecords
-
-    val convertedData = if (hasHeader) {
-      rowsCsv.get(0)
-      if (convTable.nonEmpty) {
-        val convTableHeaders: Map[String, String] = getConversionTable(Option(convTable)).get
-        searchData(rowsCsv, convTableHeaders, convTable.nonEmpty)
+      val convertedData = if (hasHeader) {
+        rowsCsv.get(0)
+        if (convTable.nonEmpty) {
+          val convTableHeaders: Map[String, String] = getConversionTable(Option(convTable)).get
+          searchData(rowsCsv, convTableHeaders, convTable.nonEmpty)
+        } else {
+          val convListToMap: Map[String, String] = rowsCsv.get(0).values().toList.zipWithIndex.map {
+            case (v, i) => (v, i.toString)
+          }.toMap
+          searchData(rowsCsv, convListToMap, convTable.nonEmpty)
+        }
       } else {
-        val convListToMap: Map[String, String] = rowsCsv.get(0).values().toList.zipWithIndex.map {
-          case (v, i) => (v, i.toString)
-        }.toMap
-        searchData(rowsCsv, convListToMap, convTable.nonEmpty)
+        if (convTable.nonEmpty) {
+          val convTableHeaders: Map[String, String] = getConversionTable(Option(convTable)).get
+          searchData(rowsCsv, convTableHeaders, convTable.nonEmpty)
+        } else {
+          val convTableHeaders: Map[String, String] = Map[String, String]()
+          searchData(rowsCsv, convTableHeaders, convTable.nonEmpty)
+        }
       }
-    } else {
-      if (convTable.nonEmpty) {
-        val convTableHeaders: Map[String, String] = getConversionTable(Option(convTable)).get
-        searchData(rowsCsv, convTableHeaders, convTable.nonEmpty)
-      } else {
-        val convTableHeaders: Map[String, String] = Map[String, String]()
-        searchData(rowsCsv, convTableHeaders, convTable.nonEmpty)
-      }
+      print("")
+      checkFieldNoUpdDate(convertedData)
     }
-    print("")
-    checkFieldNoUpdDate(convertedData)
   }
 
   private def searchData(rowsAll: util.List[CSVRecord], reader: Map[String, String], hasConvTable: Boolean): Array[Array[(String, String)]] = {
@@ -100,8 +101,7 @@ class DataReader(path: String, repeatSeparator: String = ",", convTable: String,
 
   private def checkArrayFields(data: Array[Array[(String, String)]]): Array[Array[(String, AnyRef)]] = {
 
-    val fieldArrayList: Array[String] = if (fieldArray.nonEmpty) fieldArray.split("9") else Array()
-    val h: Array[Array[(String, AnyRef)]] = data.map(f => f.map(h => if (fieldArrayList.contains(h._1)) (h._1, h._2.split(repeatSeparator)) else h))
-    h
+    val fieldArrayList: Array[String] = if (fieldArray.nonEmpty) fieldArray.split(",") else Array()
+    data.map(f => f.map(h => if (fieldArrayList.contains(h._1)) (h._1, h._2.split(repeatSeparator)) else h))
   }
 }

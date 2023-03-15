@@ -1,0 +1,33 @@
+[0m[[0m[0mdebug[0m] [0m[0mPackaging /home/oliveirmic/Projetos-dev/BIREME-GIT/csv2mongo/target/scala-2.13/csv2mongodb_2.13-0.1.0-SNAPSHOT.jar ...[0m
+[0m[[0m[0mdebug[0m] [0m[0mInput file mappings:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	csv2mongodb[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/oliveirmic/Projetos-dev/BIREME-GIT/csv2mongo/target/scala-2.13/classes/csv2mongodb[0m
+[0m[[0m[0mdebug[0m] [0m[0m	csv2mongodb/DataReader.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/oliveirmic/Projetos-dev/BIREME-GIT/csv2mongo/target/scala-2.13/classes/csv2mongodb/DataReader.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	csv2mongodb/DataReader$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/oliveirmic/Projetos-dev/BIREME-GIT/csv2mongo/target/scala-2.13/classes/csv2mongodb/DataReader$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	Main.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/oliveirmic/Projetos-dev/BIREME-GIT/csv2mongo/target/scala-2.13/classes/Main.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	mongodb[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/oliveirmic/Projetos-dev/BIREME-GIT/csv2mongo/target/scala-2.13/classes/mongodb[0m
+[0m[[0m[0mdebug[0m] [0m[0m	mongodb/MongoExport.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/oliveirmic/Projetos-dev/BIREME-GIT/csv2mongo/target/scala-2.13/classes/mongodb/MongoExport.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	mongodb/MongoExport$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/oliveirmic/Projetos-dev/BIREME-GIT/csv2mongo/target/scala-2.13/classes/mongodb/MongoExport$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	mongodb/MongoExport$DocumentObservable.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/oliveirmic/Projetos-dev/BIREME-GIT/csv2mongo/target/scala-2.13/classes/mongodb/MongoExport$DocumentObservable.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	mongodb/MongoExport$GenericObservable.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/oliveirmic/Projetos-dev/BIREME-GIT/csv2mongo/target/scala-2.13/classes/mongodb/MongoExport$GenericObservable.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	mongodb/MongoExport$ImplicitObservable.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/oliveirmic/Projetos-dev/BIREME-GIT/csv2mongo/target/scala-2.13/classes/mongodb/MongoExport$ImplicitObservable.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	Main$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/oliveirmic/Projetos-dev/BIREME-GIT/csv2mongo/target/scala-2.13/classes/Main$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	InputParameters_CSV2Mongodb.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/oliveirmic/Projetos-dev/BIREME-GIT/csv2mongo/target/scala-2.13/classes/InputParameters_CSV2Mongodb.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	compareMongodb[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/oliveirmic/Projetos-dev/BIREME-GIT/csv2mongo/target/scala-2.13/classes/compareMongodb[0m
+[0m[[0m[0mdebug[0m] [0m[0m	compareMongodb/CompareDocsColls.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/oliveirmic/Projetos-dev/BIREME-GIT/csv2mongo/target/scala-2.13/classes/compareMongodb/CompareDocsColls.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	InputParameters_CSV2Mongodb$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/oliveirmic/Projetos-dev/BIREME-GIT/csv2mongo/target/scala-2.13/classes/InputParameters_CSV2Mongodb$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0mDone packaging.[0m
