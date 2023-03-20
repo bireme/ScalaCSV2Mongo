@@ -35,7 +35,6 @@ class DataReader(pathCsv: String, repeatSeparator: String = ",", convTable: Stri
           searchData(rowsCsv, convTableHeaders, convTable.nonEmpty)
         }
       }
-      print("")
       checkFieldNoUpdDate(convertedData)
     }
   }
