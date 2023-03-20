@@ -10,13 +10,6 @@
             </Attribute>
           </value>
         </entry>
-        <entry key="/src/test/scala/file_csvTest/csvteste.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
       </map>
     </option>
   </component>

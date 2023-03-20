@@ -35,6 +35,8 @@ class MongoExport(database: String,
       dbase.getCollection(collection)
   }
 
+  def findAll: Seq[Document] = new DocumentObservable(coll.find()).observable.results()
+
   def insertDocument(doc: String): Unit =  coll.insertOne(Document(doc)).results()
 
   implicit class DocumentObservable(val observable: Observable[Document]) extends ImplicitObservable[Document] {

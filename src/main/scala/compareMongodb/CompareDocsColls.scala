@@ -1,7 +1,0 @@
-package compareMongodb
-
-class CompareDocsColls {
-
-
-
-}
