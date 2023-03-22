@@ -13,6 +13,7 @@ class MongoExport(database: String,
                   port: Option[Int] = None,
                   user: Option[String] = None,
                   password: Option[String] = None,
+                  total: Option[Int] = Option(0),
                   append: Boolean) {
   require((user.isEmpty && password.isEmpty) || (user.nonEmpty && password.nonEmpty))
 
@@ -35,7 +36,7 @@ class MongoExport(database: String,
       dbase.getCollection(collection)
   }
 
-  def findAll: Seq[Document] = new DocumentObservable(coll.find()).observable.results()
+  def findAll: Seq[Document] = new DocumentObservable(coll.find().limit(total.getOrElse(0))).observable.results()
 
   def insertDocument(doc: String): Unit =  coll.insertOne(Document(doc)).results()
 
