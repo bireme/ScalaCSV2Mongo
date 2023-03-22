@@ -2,8 +2,10 @@ import mongodb.MongoExport
 import org.json4s.DefaultFormats
 import org.json4s.native.Json
 import org.mongodb.scala.bson.BsonValue
+import org.mongodb.scala.bson.collection.immutable.Document
 
 import java.util.Date
+import scala.collection.convert.ImplicitConversions.`collection AsScalaIterable`
 import scala.util.{Failure, Success, Try}
 
 case class InputParameters_CompMongoCol(database_from1: String,
@@ -25,7 +27,8 @@ case class InputParameters_CompMongoCol(database_from1: String,
                                         user_out: Option[String],
                                         password_out: Option[String],
                                         total: Option[Int],
-                                        fields: Option[String],
+                                        noCompFields: Option[String],
+                                        takeFields: Option[String],
                                         noUpDate: Boolean,
                                         append: Boolean)
 
@@ -34,25 +37,29 @@ class CompareDocsColls {
 
   private def compareDocsColls(parameters: InputParameters_CompMongoCol): Try[Unit] = {
     Try {
-      val mongo_from1: MongoExport = new MongoExport(parameters.database_from1, parameters.collection_from1, parameters.host_from1, parameters.port_from1, parameters.user_from1, parameters.password_from1, parameters.append)
-      val mongo_from2: MongoExport = new MongoExport(parameters.database_from2.getOrElse(""), parameters.collection_from2, parameters.host_from2, parameters.port_from2, parameters.user_from2, parameters.password_from2, parameters.append)
-      val mongo_out: MongoExport = new MongoExport(parameters.database_out.getOrElse(""), parameters.collection_out, parameters.host_out, parameters.port_out, parameters.user_out, parameters.password_out, parameters.append)
+      val mongo_from1: MongoExport = new MongoExport(parameters.database_from1, parameters.collection_from1, parameters.host_from1, parameters.port_from1, parameters.user_from1, parameters.password_from1, parameters.total, parameters.append)
+      val mongo_from2: MongoExport = new MongoExport(parameters.database_from2.getOrElse(""), parameters.collection_from2, parameters.host_from2, parameters.port_from2, parameters.user_from2, parameters.password_from2, parameters.total, parameters.append)
+      val mongo_out: MongoExport = new MongoExport(parameters.database_out.getOrElse(""), parameters.collection_out, parameters.host_out, parameters.port_out, parameters.user_out, parameters.password_out, parameters.total, parameters.append)
 
-      val listDoc1 = mongo_from1.findAll
-      val listDoc2 = mongo_from2.findAll
+      val listDoc1: Seq[Document] = mongo_from1.findAll
+      val listDoc2: Seq[Document] = mongo_from2.findAll
 
-      //val docsDiff2 = listDoc2.map(f => f.filterNot(h => if (h._1 != "Refid") listDoc1.exists(doc1 => doc1.exists(field1 => h.equals(field1))) else false))
-      val docsDiff1 = listDoc1.map(f => f.filter(h => if (h._1 != "Refid") !listDoc2.exists(doc2 => doc2.exists(field2 => h.equals(field2))) else true))
-      val k = docsDiff1.filterNot(f => f.size == 1 && f.contains("Refid"))
+      val noCompFields: Array[String] = parameters.noCompFields.getOrElse("").split(",")
+      val takeFields: Array[String] = parameters.takeFields.getOrElse("").split(",")
 
-      k.foreach(f => mongo_out.insertDocument(Json(DefaultFormats).write(f.toMap.map(f => (f._1, getValue(f._2))))))
+      val docsDiff1: Seq[Document] = listDoc1.map(doc1 => doc1.filter(field1 => if (!takeFields.contains(field1._1)) !listDoc2.exists(doc2 => doc2.exists(field2 => field1.equals(field2))) else true))
+      val docsNonEmpty: Seq[Document] = docsDiff1.dropWhile(f => f.isEmpty)
+      val docsWithNoCompFields: Seq[Document] = docsNonEmpty.map(doc => doc.filterNot(field => noCompFields.contains(field._1)))
+
+      docsWithNoCompFields.foreach(f => mongo_out.insertDocument(Json(DefaultFormats).write(f.toMap.map(f => (f._1, getValue(f._2))))))
     }
   }
 
-  def getValue(f: BsonValue): String = {
+  private def getValue(f: BsonValue): AnyRef = {
 
     f match {
       case f if f.isObjectId => f.asObjectId().getValue.toString
+      case f if f.isArray => f.asArray().getValues.map(f => f.asString().getValue).toArray
       case _ => f.asString().getValue
     }
   }
@@ -81,7 +88,8 @@ object CompareDocsColls {
     System.err.println("[-user_out]                           - MongoDB user name")
     System.err.println("[-password_out]                       - MongoDB user password")
     System.err.println("[-total]                              - If present, take total documents")
-    System.err.println("[-fields]                             - Conversion field string to array")
+    System.err.println("[-noCompFields]                       - Conversion field string to array")
+    System.err.println("[-takeFields]                         - Conversion field string to array")
     System.err.println("[-noUpDate]                           - If present, it will not create de update date field (_updd), otherwise it will be created")
     System.err.println("[-append]                             - If absent, it will append documents into the MongoDB database, otherwise the database will be previously erased")
     System.exit(1)
@@ -105,7 +113,7 @@ object CompareDocsColls {
 
     val listInputParam: List[String] = List("database_from1", "collection_from1", "collection_from2", "collection_out", "database_from2", "database_out", "host_from1",
       "port_from1", "host_from2", "port_from2", "host_out", "port_out", "user_from1", "password_from1", "user_from2", "password_from2", "user_out", "password_out",
-      "total", "fields", "noUpdDate", "append")
+      "total", "noCompFields", "takeFields", "noUpdDate", "append")
 
     val paramsInvalid: List[String] = parameters.keys.dropWhile(listInputParam.contains).toList
 
@@ -132,13 +140,14 @@ object CompareDocsColls {
     val user_out: Option[String] = parameters.get("user_out")
     val password_out: Option[String] = parameters.get("password_out")
     val total: Option[Int] = parameters.get("total").flatMap(_.toIntOption)
-    val fields: Option[String] = parameters.get("fields")
+    val noCompFields: Option[String] = parameters.get("noCompFields")
+    val takeFields: Option[String] = parameters.get("takeFields")
     val noUpDate: Boolean = parameters.contains("noUpDate")
     val append: Boolean = parameters.contains("append")
 
     val params: InputParameters_CompMongoCol = InputParameters_CompMongoCol(database_from1, collection_from1, collection_from2,
       collection_out, database_from2, database_out, host_from1, port_from1, host_from2, port_from2, host_out, port_out,
-      user_from1, password_from1, user_from2, password_from2, user_out, password_out, total, fields, noUpDate, append)
+      user_from1, password_from1, user_from2, password_from2, user_out, password_out, total, noCompFields, takeFields, noUpDate, append)
     val startDate: Date = new Date()
     (new CompareDocsColls).compareDocsColls(params) match {
       case Success(_) =>

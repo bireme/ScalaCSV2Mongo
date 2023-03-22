@@ -49,7 +49,7 @@ class DataReader(pathCsv: String, repeatSeparator: String = ",", convTable: Stri
     val readerCsv = rowsAll.get(0)
     val valuesRowsCsv: Array[Array[String]] = rowsCsv.toArray.zipWithIndex.map(f => rowsCsv.get(f._2).values())
     val dataKeysAndValuesCsv: Array[Array[(String, String)]] = valuesRowsCsv.map(f => readerCsv.values().zip(f))
-    val dataConvKeysAndValues: Array[Array[(String, String)]] = dataKeysAndValuesCsv.map(y => y.filter(f => reader.contains(f._1.replace(" ", "_"))))
+    val dataConvKeysAndValues: Array[Array[(String, String)]] = dataKeysAndValuesCsv.map(y => y.filter(f => reader.contains(f._1)))
 
     if (hasHeader && !hasConvTable) return dataKeysAndValuesCsv
     val data: Array[Array[(String, String)]] = dataKeysAndValuesCsv.map(h => h.zipWithIndex.map {
@@ -59,7 +59,7 @@ class DataReader(pathCsv: String, repeatSeparator: String = ",", convTable: Stri
 
     if (hasConvTable) {
       if (hasHeader && hasConvTable) {
-        dataConvKeysAndValues.map(f => f.map(h => (h._1.replace(h._1, reader(h._1.replace(" ", "_"))), h._2)))
+        dataConvKeysAndValues.map(f => f.map(h => (h._1.replace(h._1, reader(h._1)), h._2)))
       } else {
         data.map(f => f.map(h => (h._1.replace(h._1, reader(h._1)), h._2)))
       }

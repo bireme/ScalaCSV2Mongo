@@ -1,4 +1,2 @@
-[0m[[0m[33mwarn[0m] [0m[0m/home/oliveirmic/Projetos-dev/BIREME-GIT/csv2mongo/src/main/scala/compareMongodb/CompareDocsColls.scala:48:7: multiline expressions might require enclosing parentheses; a value can be silently discarded when Unit is expected[0m
-[0m[[0m[33mwarn[0m] [0m[0m      k[0m
-[0m[[0m[33mwarn[0m] [0m[0m      ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m1 deprecation (since 2.13.0); re-run with -deprecation for details[0m
 [0m[[0m[33mwarn[0m] [0m[0mone warning found[0m

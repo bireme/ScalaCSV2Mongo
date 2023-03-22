@@ -16,6 +16,7 @@ case class InputParameters_CSV2Mongodb(csv: String,
                                        repeatSeparator: Option[String],
                                        convTable: Option[String],
                                        fieldArray: Option[String],
+                                       total: Option[Int],
                                        append: Boolean,
                                        noUpDate: Boolean,
                                        hasHeader: Boolean)
@@ -24,7 +25,7 @@ class Main {
 
   private def exportCSV2Mongodb(parameters: InputParameters_CSV2Mongodb): Try[Unit] = {
     Try {
-      val mongoReader: MongoExport = new MongoExport(parameters.database, parameters.collection, parameters.host, parameters.port, parameters.user, parameters.password, parameters.append)
+      val mongoReader: MongoExport = new MongoExport(parameters.database, parameters.collection, parameters.host, parameters.port, parameters.user, parameters.password, parameters.total, parameters.append)
       val csvData: DataReader = new DataReader(parameters.csv, parameters.repeatSeparator.getOrElse(""), parameters.convTable.getOrElse(""), parameters.fieldArray.getOrElse(""), parameters.hasHeader, parameters.noUpDate)
 
       val jsonDataList: Array[String] = csvData.reader() match {
@@ -50,6 +51,7 @@ object Main {
     System.err.println("[-repeatSeparator=<str>]            - String separating repetitive occurrences")
     System.err.println("[-convTable=<path>]                 - Conversion file path")
     System.err.println("[-fieldArray=<str>]                 - Conversion field string to array")
+    System.err.println("[-total=<int>]                      - Conversion field string to array") //corrigir
     System.err.println("[--append]                          - If absent, it will append documents into the MongoDB database, otherwise the database will be previously erased")
     System.err.println("[--noUpDate]                        - If present, it will not create de update date field (_updd), otherwise it will be created")
     System.err.println("[--hasHeader]                       - If present the csv has a header\n")
@@ -73,7 +75,7 @@ object Main {
     }
 
     val listInputParam: List[String] = List("csv", "database", "collection", "host", "port", "user", "password",
-      "repeatSeparator", "convTable", "fieldArray", "append", "noUpDate", "hasHeader")
+      "repeatSeparator", "convTable", "fieldArray", "total", "append", "noUpDate", "hasHeader")
 
     val paramsInvalid: List[String] = parameters.keys.dropWhile(listInputParam.contains).toList
 
@@ -91,12 +93,13 @@ object Main {
     val repeatSeparator: Option[String] = parameters.get("repeatSeparator")
     val convTable: Option[String] = parameters.get("convTable")
     val fieldArray: Option[String] = parameters.get("fieldArray")
+    val total: Option[Int] = parameters.get("total").flatMap(_.toIntOption)
     val append: Boolean = parameters.contains("append")
     val noUpDate: Boolean = parameters.contains("noUpDate")
     val hasHeader: Boolean = parameters.contains("hasHeader")
 
     val params: InputParameters_CSV2Mongodb = InputParameters_CSV2Mongodb(csv, database, collection, host, port,
-      user, password, repeatSeparator, convTable, fieldArray, append, noUpDate, hasHeader)
+      user, password, repeatSeparator, convTable, fieldArray, total, append, noUpDate, hasHeader)
     val startDate: Date = new Date()
 
     (new Main).exportCSV2Mongodb(params) match {

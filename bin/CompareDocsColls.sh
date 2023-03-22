@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /home/javaapps/sbt-projects/csvToMongo/ || exit
+cd /home/oliveirmic/Projetos-dev/BIREME-GIT/csv2mongo/ || exit
 
 export SBT_OPTS="-Xms12g -Xmx18g -XX:+UseG1GC"
 
