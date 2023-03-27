@@ -33,12 +33,19 @@ class MongoExport(database: String,
       dbase.getCollection(collection)
     else
       dbase.getCollection(collection).drop().results()
-      dbase.getCollection(collection)
+    dbase.getCollection(collection)
   }
 
   def findAll: Seq[Document] = new DocumentObservable(coll.find().limit(total.getOrElse(0))).observable.results()
 
-  def insertDocument(doc: String): Unit =  coll.insertOne(Document(doc)).results()
+  def insertDocument(doc: String): Unit = coll.insertOne(Document(doc)).results()
+
+
+  def insertDocuments(docs: Seq[String]): Unit = {
+    val documents = docs.map(Document(_))
+    coll.insertMany(documents).results()
+  }
+
 
   implicit class DocumentObservable(val observable: Observable[Document]) extends ImplicitObservable[Document] {
     override val converter: Document => String = doc => doc.toJson()
