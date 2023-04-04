@@ -1,4 +1,4 @@
 Refid => ID
 Author => AUTHORS
 Abstract => ABSTRACT
-Accession_number => NUMBER
+Accession number => NUMBER
